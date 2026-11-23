@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>GB3</title>
+  <style>
+    body {
+      background-color: #FFFFFF;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    #texte {
+      color: blue;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="texte"><br><br><br><br><br><br><br><br><br>5186923<br><br><br><br><br><br><br><br><br></div>
+    <script>
+function enterFullscreen(){
+
+    if(
+      !document.fullscreenElement
+    ){
+
+        document
+        .documentElement
+        .requestFullscreen()
+        .catch(()=>{});
+    }
+}
+
+document.addEventListener(
+    "click",
+    enterFullscreen,
+    {once:true}
+);
+
+document.addEventListener(
+    "touchstart",
+    enterFullscreen,
+    {once:true}
+);
+
+window.addEventListener(
+    "load",
+    ()=>{
+keepScreenAwake();
+
+});
+
+let wakeLock = null;
+
+async function keepScreenAwake() {
+    try {
+        wakeLock = await navigator.wakeLock.request("screen");
+
+        wakeLock.addEventListener("release", () => {
+            console.log("Wake Lock released");
+        });
+
+        console.log("Screen Wake Lock active");
+
+    } catch (err) {
+        console.log("Wake Lock error:", err);
+    }
+}
+
+document.addEventListener("visibilitychange", async () => {
+
+    if (
+        wakeLock !== null &&
+        document.visibilityState === "visible"
+    ) {
+        await keepScreenAwake();
+    }
+
+});
+    </script>
+</body>
+</html>
